@@ -1,13 +1,16 @@
 import pika
 import json
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 class RabbitMQPublisher:
     def __init__(self) -> None:
-        self.__host = 'localhost'
-        self.__port = 5672
-        self.__username = 'guest'
-        self.__password = 'guest'
-        self.__exchange = "minha_exchange"
+        self.__host = os.getenv('RABBITMQ_HOST', 'localhost')
+        self.__port = int(os.getenv('RABBITMQ_PORT', 5672))
+        self.__username = os.getenv('RABBITMQ_USER', 'guest')
+        self.__password = os.getenv('RABBITMQ_PASSWORD', 'guest')
+        self.__exchange = os.getenv('RABBITMQ_EXCHANGE', 'minha_exchange')
         self.__routing_key = ""
         self.__channel = self.create_channel()
 
@@ -36,5 +39,7 @@ class RabbitMQPublisher:
 
 rabbit_mq_publisher = RabbitMQPublisher()
 rabbit_mq_publisher.send_message({
-    "message": "Hello, RabbitMQ!"
+    "message": "Finalizado!!!"
 })
+
+

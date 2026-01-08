@@ -1,19 +1,16 @@
 import pika
-import json
-
-def rabbitmq_callback(ch, method, properties, body):
-    msg = body.decode('utf-8')
-    formatted_msg = json.loads(msg)
-    print(formatted_msg)
-    print(type(formatted_msg))
+from .callback import rabbitmq_callback
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 class RabbitMQConsumer:
     def __init__(self) -> None:
-        self.__host = 'localhost'
-        self.__port = 5672
-        self.__username = 'guest'
-        self.__password = 'guest'
-        self.__queue = "minha_queue"
+        self.__host = os.getenv('RABBITMQ_HOST', 'localhost')
+        self.__port = int(os.getenv('RABBITMQ_PORT', 5672))
+        self.__username = os.getenv('RABBITMQ_USER', 'guest')
+        self.__password = os.getenv('RABBITMQ_PASSWORD', 'guest')
+        self.__queue = os.getenv('RABBITMQ_QUEUE', 'minha_queue')
         self.__channel = self.create_channel()
 
     def create_channel(self):
